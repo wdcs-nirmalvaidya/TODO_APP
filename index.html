@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List with Pie Chart</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="todo-box">
+      <h2>To-Do List</h2>
+
+      <div class="input-group">
+        <input type="text" id="taskInput" placeholder="Enter task">
+        <button id="addBtn">Add</button>
+      </div>
+
+      <ul id="taskList"></ul>
+
+      <div class="stats">
+        <p id="stats">Total: 0 | Completed: 0 | Progress: 0%</p>
+        <div class="progress-bar">
+          <div class="progress" id="progress"></div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="taskChart" width="200" height="200"></canvas>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>    
+</body>
+</html>
+
