@@ -7,7 +7,6 @@ const Canvas = document.getElementById('taskChart');
 
 let editedLi = null;
 
-
 let taskChart = new Chart(Canvas, {
   type: 'pie',
   data: {
@@ -29,39 +28,10 @@ function addOrEditTask() {
 
   if (editedLi) {
     editedLi.querySelector('span').textContent = taskText + " ";
-    addBtn.textContent = "Add";
     editedLi = null;
+    addBtn.textContent = "Add";
   } else {
-    const li = document.createElement('li');
-    const textSpan = document.createElement('span');
-    textSpan.textContent = taskText + " ";
-    li.appendChild(textSpan);
-
-    const editBtn = document.createElement('button');
-    editBtn.textContent = "✏️";
-    editBtn.onclick = () => {
-      input.value = textSpan.textContent.trim();
-      editedLi = li;
-      addBtn.textContent = "Edit";
-    };
-    li.appendChild(editBtn);
-
-    const delBtn = document.createElement('button');
-    delBtn.textContent = "❌";
-    delBtn.onclick = () => {
-      li.remove();
-      saveTasks();
-      updateStats();
-    };
-    li.appendChild(delBtn);
-
-    li.addEventListener('click', (e) => {
-      if (e.target === editBtn || e.target === delBtn) return;
-      li.classList.toggle('done');
-      saveTasks();
-      updateStats();
-    });
-
+    const li = createTaskElement({ text: taskText, done: false });
     list.appendChild(li);
   }
 
@@ -70,40 +40,57 @@ function addOrEditTask() {
   updateStats();
 }
 
+function createTaskElement(task) {
+  const li = document.createElement('li');
+  if (task.done) li.classList.add('done');
+
+  const textSpan = document.createElement('span');
+  textSpan.textContent = task.text + " ";
+  li.appendChild(textSpan);
+
+  const editBtn = document.createElement('button');
+  editBtn.textContent = "✏️";
+  editBtn.onclick = () => {
+    input.value = task.text;
+    editedLi = li;
+    addBtn.textContent = "Edit";
+  };
+  li.appendChild(editBtn);
+
+  const delBtn = document.createElement('button');
+  delBtn.textContent = "❌";
+  delBtn.onclick = () => {
+    li.remove();
+    saveTasks();
+    updateStats();
+  };
+  li.appendChild(delBtn);
+
+  li.addEventListener('click', (e) => {
+    if (e.target === editBtn || e.target === delBtn) return;
+    li.classList.toggle('done');
+    saveTasks();
+    updateStats();
+  });
+
+  return li;
+}
 
 function saveTasks() {
-  localStorage.setItem('tasks', list.innerHTML);
+  
+  const tasks = Array.from(list.children).map(li => ({
+    text: li.querySelector('span').textContent.trim(),
+    done: li.classList.contains('done')
+  }));
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 }
-
 
 function loadTasks() {
-  list.innerHTML = localStorage.getItem('tasks') || "";
-  list.querySelectorAll('li').forEach(li => {
-    const editBtn = li.querySelector('button:nth-child(2)');
-    const delBtn = li.querySelector('button:nth-child(3)');
-
-    li.addEventListener('click', (e) => {
-      if (e.target === editBtn || e.target === delBtn) return;
-      li.classList.toggle('done');
-      saveTasks();
-      updateStats();
-    });
-
-    delBtn.onclick = () => {
-      li.remove();
-      saveTasks();
-      updateStats();
-    };
-
-    editBtn.onclick = () => {
-      input.value = li.querySelector('span').textContent.trim();
-      editedLi = li;
-      addBtn.textContent = "Edit";
-    };
-  });
+  const saved = JSON.parse(localStorage.getItem('tasks') || '[]');
+  list.innerHTML = "";
+  saved.forEach(task => list.appendChild(createTaskElement(task)));
   updateStats();
 }
-
 
 function updateStats() {
   const total = list.children.length;
