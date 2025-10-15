@@ -3,37 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To-Do List with Pie Chart</title>
+  <title>Login</title>
   <link rel="stylesheet" href="style.css">
-  
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container"> 
-    <div class="todo-box">
-      <h2>To-Do List</h2>
-
-      <div class="input-group">
-        <input type="text" id="taskInput" placeholder="Enter task">
-        <button id="addBtn">Add</button>
-      </div>
-
-      <ul id="taskList"></ul>
-
-      <div class="stats">
-        <p id="stats">Total: 0 | Completed: 0 | Progress: 0%</p>
-        <div class="progress-bar">
-          <div class="progress" id="progress"></div>
-        </div>
-      </div>
-
-      <div class="chart-container">
-        <canvas id="taskChart" width="200" height="200"></canvas>
-      </div>
-
+  <div class="container">
+    <h1>Login</h1>
+    <div class="input-area">
+      <input type="text" id="username" placeholder="Enter username">
     </div>
+    <div class="input-area">
+      <input type="password" id="password" placeholder="Enter password">
+    </div>
+    <button id="loginBtn">Login</button>
+    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+    <p id="message" class="message-area"></p>
   </div>
-
-  <script src="script.js"></script>    
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const message = document.getElementById('message');
+      const users = JSON.parse(localStorage.getItem('users')) || {};
+      if (!users[username] || users[username].password !== password) {
+        message.textContent = "Invalid username or password!";
+        return;
+      }
+      localStorage.setItem('currentUser', username);
+      window.location.href = 'list.html';
+    });
+  </script>
 </body>
 </html>
