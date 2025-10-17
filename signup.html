@@ -19,10 +19,10 @@
       <input type="password" id="confirmPassword" placeholder="Confirm password">
     </div>
     <button id="signupBtn">Sign Up</button>
-    <p>Already have an account? 
-      <a href="index.html">Login here</a></p>
-    <p id="message" class="message-area"></p>
+    <p>Already have an account? <a href="index.html">Login here</a></p>
+    <p id="message"></p>
   </div>
+
   <script>
     document.getElementById('signupBtn').addEventListener('click', () => {
       const username = document.getElementById('username').value.trim();
@@ -31,26 +31,31 @@
       const message = document.getElementById('message');
       if (!username || !password || !confirmPassword) {
         message.textContent = "All fields are required!";
+        message.style.color = "red";
         return;
       }
       if (password !== confirmPassword) {
-        message.textContent = "Passwords do not match";
+        message.textContent = "Passwords do not match!";
+        message.style.color = "red";
         return;
       }
+
       const users = JSON.parse(localStorage.getItem('users')) || {};
       if (users[username]) {
-        message.textContent = "Username already exists";
+        message.textContent = "Username already exists!";
+        message.style.color = "red";
         return;
       }
-      users[username] = { password, tasks: [] };
+
+      users[username] = { password };
       localStorage.setItem('users', JSON.stringify(users));
-      message.style.color = 'green';
-      message.textContent = "Signup successful Redirecting...";
+      message.textContent = "Signup successful! Redirecting...";
+      message.style.color = "green";
+
       setTimeout(() => {
-        window.location.href = 'index.html';
+        window.location.href = "index.html";
       }, 1000);
     });
-  
-    </script>
-    </body>
-    </html>
+</script>
+</body>
+</html>

@@ -7,6 +7,14 @@ const Canvas = document.getElementById('taskChart');
 
 let editedLi = null;
 
+
+const currentUser = localStorage.getItem('currentUser');
+if (!currentUser) {
+  
+  alert("Please login first!");
+  window.location.href = 'index.html';
+}
+
 let taskChart = new Chart(Canvas, {
   type: 'pie',
   data: {
@@ -77,16 +85,23 @@ function createTaskElement(task) {
 }
 
 function saveTasks() {
-  
   const tasks = Array.from(list.children).map(li => ({
     text: li.querySelector('span').textContent.trim(),
     done: li.classList.contains('done')
   }));
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+
+  const users = JSON.parse(localStorage.getItem('users')) || {};
+  if (currentUser && users[currentUser]) {
+    users[currentUser].tasks = tasks;
+    localStorage.setItem('users', JSON.stringify(users));
+  }
 }
 
 function loadTasks() {
-  const saved = JSON.parse(localStorage.getItem('tasks') || '[]');
+  const users = JSON.parse(localStorage.getItem('users')) || {};
+  const saved = (currentUser && users[currentUser]) ? users[currentUser].tasks : [];
+
   list.innerHTML = "";
   saved.forEach(task => list.appendChild(createTaskElement(task)));
   updateStats();
@@ -103,4 +118,5 @@ function updateStats() {
   const remaining = total - completed;
   taskChart.data.datasets[0].data = [completed, remaining];
   taskChart.update();
+  
 }
