@@ -10,7 +10,11 @@
 <body>
   <div class="container">
     <div class="todo-box">
-      <h2>My To-Do List</h2>
+   
+      <div class="header-bar">
+        <h2>My To-Do List</h2>
+        <button id="logoutBtn" class="logout-btn">Sign Out</button>
+      </div>
 
       <div class="input-group">
         <input type="text" id="taskInput" placeholder="Enter new task..." />
@@ -29,5 +33,24 @@
   </div>
 
   <script src="script.js"></script>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const currentUser = localStorage.getItem('currentUser');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      if (!currentUser) {
+        alert("Please login first!");
+        window.location.href = 'index.html';
+        return;
+      }
+
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('currentUser');
+        alert("You have been signed out!");
+        window.location.href = 'index.html';
+      });
+    });
+  </script>
 </body>
 </html>
