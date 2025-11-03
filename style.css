@@ -67,7 +67,7 @@ button {
 }
 
 button:hover {
-  background: #4834d4;
+  background: #ac29a3;
   transform: scale(1.05);
 }
 
@@ -95,7 +95,7 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #6c5ce7;
+  background: #c1c4d0;
   color: white;
   padding: 12px 16px;
   border-radius: 10px;
